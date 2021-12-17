@@ -34,7 +34,7 @@ int delete_symbol (char* s[], char waste);
  * \param  scndSTR - adress second string
  * \return   result of comparation - const from enum for_compsre_str
  */
-int compare_str (const char *frstSTR, const char *scndSTR );
+int compare_str (const char *frstSTR,const char *scndSTR );
 
 /** \brief  compare two string from left to right
  *
@@ -60,5 +60,11 @@ int copy_str( char *in, char *out);
 int strlength (char* s);
 
 void s_print  (char *s);
+
+int  del_xspace (char *s, size_t size);
+
+void exch_symbols (char *s, size_t size, const char bad, const char good);
+
+int  del_void_str (char *s, size_t size);
 
 #endif // S_FUNC_H_INCLUDED

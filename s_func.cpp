@@ -54,7 +54,7 @@ int strlength (char *s)
   // smth wrohg with { }  !!!
 
 
-int compare_str ( const char *frstSTR, const char *scndSTR )
+int compare_str (const char *frstSTR,const char *scndSTR )
 {
 	assert ( frstSTR != NULL );
 	assert ( scndSTR != NULL );
@@ -98,16 +98,17 @@ int delete_symbol (char* s, char waste)
 	int i = -1;
     char current_symbol = s [ 0 ];
 
-	while ( current_symbol != '\0' || current_symbol != EOF || current_symbol != '\n' ) {
-			++i;
-            current_symbol = s [ i ];
+	while ( current_symbol != '\0' || current_symbol != EOF || current_symbol != '\n' )
+	{
+		++i;
+        current_symbol = s [ i ];
 
-			if ( s [ i ] == waste )
-            {
-				++ cntr_waste;
-				continue;
-			}
-			s [ i - cntr_waste ] = s [ i ];
+		if ( s [ i ] == waste )
+        {
+			++ cntr_waste;
+			continue;
+		}
+		s [ i - cntr_waste ] = s [ i ];
 	}
 	s [ i - cntr_waste +1 ] = '\0';
 
@@ -131,5 +132,71 @@ void s_print (char *s)
 		i++;
 	}
 	printf("\n");
+}
+
+int del_xspace (char *s, size_t size)
+{
+	assert (NULL != s);
+
+	int cntr_waste = 0;
+
+	for (int i = 0 ; i < size ; i++)
+	{
+		if (' ' == s[i])
+		{
+			if (' ' == s[i - 1])
+			{
+				++cntr_waste;
+				continue;
+			}
+		}
+		s[i - cntr_waste] = s[i];
+	}
+	s[size - cntr_waste] ='\0';
+	return size - cntr_waste;
+}
+
+void exch_symbols (char *s, size_t size, const char bad, const char good)
+{
+	for (int i = 0; i < size; i++)
+	{
+		if (bad == s[i])
+		{
+			s[i] = good;
+		}
+	}
+}
+
+int del_void_str (char *s, size_t size)
+{
+	assert (NULL != s);
+
+	int cntr_waste = 0;
+	bool begin = false;
+
+	for (int i = 0 ; i < size ; i++)
+	{
+		if ('\0' == s[i])
+		{	
+			if (!begin)
+			{
+				++cntr_waste;
+				continue;
+			}
+			if ('\0' == s[i - 1])
+			{
+				++cntr_waste;
+				continue;
+			}
+		}
+		begin = true;
+		s[i - cntr_waste] = s[i];
+	}
+	if ('\0' != s[size - cntr_waste - 1])
+	{
+		s[size - cntr_waste] ='\0';
+		return size - cntr_waste;
+	}
+	return size - cntr_waste - 1;
 }
 
