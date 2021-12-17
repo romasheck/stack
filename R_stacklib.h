@@ -20,9 +20,9 @@ const int POISON54 = 1488;
 
 enum type_of_error_with_stack
 {
-    NOT_ERROR,
-    CALLOC_ERROR,
-    REALLOC_ERROR,
+    NOT_STK_ERROR,
+    STK_CALLOC_ERROR,
+    STK_REALLOC_ERROR,
     STACK_OVERFLOW,
     SIZE_LESS_ZERO,
     CAPACITY_LESS_ZERO, 
@@ -38,9 +38,9 @@ enum type_of_error_with_stack
     TRY_POP_VOID_STK
 };
 
+//typedef int stk_elem_type; //you can exchange double for anything type
 typedef int stk_elem_type; //you can exchange double for anything type
-//#define stk_elem_type int //you can exchange double for anything type
-#define fomat_stk_elem "%d" //exchange specifier for ur type
+#define fomat_stk_elem %d //exchange specifier for ur type
 
 struct stack
 {
@@ -75,18 +75,19 @@ uint64_t           calc_hash_stk   (stack *stk);
 
 uint64_t           calc_hash_buf   (stack *stk);
 
-//void               fresh_the_hash  (stack *stk);
-
-#define FRESH_THE_HASH(stck) \
-do{\
+#define FRESH_THE_HASH(stck)                    \
+do{                                             \
     uint64_t tmp_hash_stk = calc_hash_stk (stk);\
     uint64_t tmp_hash_buf = calc_hash_buf (stk);\
-    stk->hash_stk = tmp_hash_stk;\
-    stk->hash_buf = tmp_hash_buf;\
+    stk->hash_stk = tmp_hash_stk;               \
+    stk->hash_buf = tmp_hash_buf;               \
 } while (false);
 //cycle use because tmp_... redeclareted, when you use FRESH_THE_HASH twice in one function
 
-#define PRINT_THE_HASH(stk)\
+#define DUMP(stk)  stackDump (stk, __FILE__, __func__, __LINE__);
+#define CHECK(stk) stackCheck (stk, __func__, __LINE__);
+
+#define PRINT_THE_HASH(stk)                                  \
 fprintf (log_file, "stk->hash_stk == %llu\n", stk->hash_stk);\
 fprintf (log_file, "calalculated stks hash == %llu", calc_hash_stk (stk));//db
 
