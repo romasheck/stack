@@ -7,20 +7,6 @@ int main ()
     stackCtor (&stk, 10);
 
     stackPush (&stk, 10);
-    /*
-    stackPush (&stk, 10);
-    stackPush (&stk, 10);
-    stackPush (&stk, 10);
-    stackPush (&stk, 10);
-    stackPush (&stk, 10);
-    stackPush (&stk, 10);
-    stackPush (&stk, 10);
-    stackPush (&stk, 10);*/
-    
-    /*for (int i = 0; i < 45; ++i)
-    {
-        stackPop (&stk);
-    }*/
     
     int x = stackPop (&stk);
 
