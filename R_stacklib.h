@@ -7,16 +7,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include <cmath>
-#include "s_func.h"
 
 // right bufbird replace, if u exchange capacity
-// hash, resize, 
 
 extern FILE* log_file;
 
-const int BIRD_CONST = 228;
-
-const int POISON54 = 1488;
+const uint_64 BIRD_CONST = 228;
 
 enum type_of_error_with_stack
 {
@@ -47,6 +43,8 @@ enum modes_of_stackReSize
 //typedef int stk_elem_type; //you can exchange double for anything type
 typedef int stk_elem_type; //you can exchange double for anything type
 #define fomat_stk_elem %d //exchange specifier for ur type
+
+const stk_elem_type POISON54 = 1488;
 
 struct stack
 {
