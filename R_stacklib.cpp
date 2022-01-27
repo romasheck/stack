@@ -96,7 +96,7 @@ void stackReSize (stack* stk, const int mode)
     {
         if (stk->capacity < 10)
         {
-          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc((char*)stk->start_ptr - sizeof(uint64_t), sizeof(stk_elem_type) * (stk->capacity * 1.5 + 5) + 2*sizeof(uint64_t));
+          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc((char*)stk->start_ptr - sizeof(uint64_t), sizeof(stk_elem_type) * (stk->capacity * 1.5 + 6) + 2*sizeof(uint64_t));
 
           if (NULL == tmp_ptr)
           {
