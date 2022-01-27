@@ -13,7 +13,6 @@ void stackCtor (stack* stk, int cap)
     {
         stk->error = STK_CALLOC_ERROR;
         stackDump (stk, __FILE__, __func__, __LINE__);
-        printf ("warning: failed to allocate memory");
         FRESH_THE_HASH (stk);
         return;
     }
