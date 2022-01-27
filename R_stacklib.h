@@ -38,6 +38,12 @@ enum type_of_error_with_stack
     TRY_POP_VOID_STK
 };
 
+enum modes_of_stackReSize
+{
+    EXPAND,
+    REDUCE
+};
+
 //typedef int stk_elem_type; //you can exchange double for anything type
 typedef int stk_elem_type; //you can exchange double for anything type
 #define fomat_stk_elem %d //exchange specifier for ur type
@@ -61,7 +67,7 @@ void               stackPush        (stack *stk, stk_elem_type elem);
 
 stk_elem_type      stackPop         (stack *stk);
 
-void               stackReSize      (stack* stk, const char* instruction); // ebala sho pizdec
+void               stackReSize      (stack* stk, const int mode); // ebala sho pizdec
 
 void               stackDtor        (stack *stk); 
 

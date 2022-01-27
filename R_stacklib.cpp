@@ -44,7 +44,7 @@ void stackPush (stack *stk, stk_elem_type elem)
     
     if (stk->size >= stk->capacity / 2)
     {
-        stackReSize (stk, "expand");
+        stackReSize (stk, EXPAND);
         stackCheck  (stk, "stackPush", __LINE__);
     }
 
@@ -80,7 +80,7 @@ stk_elem_type stackPop (stack *stk)
 
     if (stk->size < stk->capacity / 4)
     {
-        stackReSize (stk, "reduce");
+        stackReSize (stk, REDUCE);
     } 
     FRESH_THE_HASH(stk);
 
@@ -89,10 +89,10 @@ stk_elem_type stackPop (stack *stk)
     return last_elem;
 }
 
-void stackReSize (stack* stk, const char* mode)
+void stackReSize (stack* stk, const int mode)
 {
     stackCheck (stk, "stackReSize", __LINE__);
-    if (compare_str(mode, "expand") == S_equal)
+    if (mode == EXPAND)
     {
         if (stk->capacity < 10)
         {
@@ -152,7 +152,7 @@ void stackReSize (stack* stk, const char* mode)
           return;
         }
     }
-    if (compare_str("reduce", mode) == S_equal)
+    if (mode == REDUCE)
     {
         if (stk->capacity < 10)
         {
