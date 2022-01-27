@@ -8,7 +8,7 @@ void stackCtor (stack* stk, int cap)
     stk->capacity = cap;
     stk->cntrDtor = 0; 
     stk->error = NOT_STK_ERROR;
-    stk_elem_type* tmp_ptr  = (stk_elem_type*) (calloc(cap + 2, sizeof(stk_elem_type)));
+    stk_elem_type* tmp_ptr  = (stk_elem_type*)(calloc(cap*sizeof(stk_elem_type) + 2*sizeof(uint64_t), sizeof(char)));
     if (NULL == tmp_ptr)
     {
         stk->error = STK_CALLOC_ERROR;
@@ -17,13 +17,26 @@ void stackCtor (stack* stk, int cap)
         FRESH_THE_HASH (stk);
         return;
     }
-    stk->start_ptr = tmp_ptr + 1;
-    *(stk->start_ptr - 1) = 228;
-    *(stk->start_ptr + cap) = 228;
-    FRESH_THE_HASH(stk);
+    stk->start_ptr = tmp_ptr;
+    stackPlaceCanary (stk);
+    FRESH_THE_HASH(stk)
     
     stackCheck (stk, "stackCtor", __LINE__);
-}           
+}
+
+void stackPlaceCanary (stack* stk)
+{
+    *(uint64_t*)(stk->start_ptr) = BIRD_CONST;
+
+    char* tmp_ptr = (char*)(stk->start_ptr);
+    tmp_ptr += sizeof(uint64_t);
+    stk->start_ptr = (stk_elem_type*)tmp_ptr;
+
+    tmp_ptr = (char*)stk->start_ptr + stk->capacity*sizeof(stk_elem_type);
+    *(uint64_t*)(tmp_ptr) = BIRD_CONST; 
+    
+    return;
+}
 
 void stackPush (stack *stk, stk_elem_type elem)
 {
@@ -39,7 +52,7 @@ void stackPush (stack *stk, stk_elem_type elem)
     stk->size ++;
 
     FRESH_THE_HASH(stk);
-
+    
     stackCheck (stk, "stackPush", __LINE__);
 }
 
@@ -72,7 +85,7 @@ stk_elem_type stackPop (stack *stk)
     FRESH_THE_HASH(stk);
 
     stackCheck (stk, "stackPop", __LINE__);
-
+    
     return last_elem;
 }
 
@@ -83,7 +96,7 @@ void stackReSize (stack* stk, const char* mode)
     {
         if (stk->capacity < 10)
         {
-          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc(stk->start_ptr - 1, sizeof(stk_elem_type) * (stk->capacity * 1.5 + 5 + 2));
+          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc((char*)stk->start_ptr - sizeof(uint64_t), sizeof(stk_elem_type) * (stk->capacity * 1.5 + 5) + 2*sizeof(uint64_t));
 
           if (NULL == tmp_ptr)
           {
@@ -92,17 +105,17 @@ void stackReSize (stack* stk, const char* mode)
             stackDump(stk, __FILE__, "stackResize", __LINE__);
             return;
           }
-
-          stk->start_ptr = tmp_ptr + 1;
+          stk->start_ptr = tmp_ptr;
           stk->capacity = stk->capacity * 1.5 + 5;
-          *(stk->start_ptr + stk->capacity) = 228;
+          stackPlaceCanary (stk);
           FRESH_THE_HASH(stk);
+
           stackCheck (stk, "stackReSize", __LINE__);
           return;
         }
         if (stk->capacity > 10000)
         {
-          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc(stk->start_ptr - 1, sizeof(stk_elem_type) * (stk->capacity * 1.5 + 2));
+          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc((char*)stk->start_ptr - sizeof(uint64_t), sizeof(stk_elem_type) * (stk->capacity * 1.5) + 2*sizeof(uint64_t));
           if (NULL == tmp_ptr)
           {
             stk->error = STK_REALLOC_ERROR; 
@@ -111,16 +124,17 @@ void stackReSize (stack* stk, const char* mode)
             return;
           }
 
-          stk->start_ptr = tmp_ptr + 1;
+          stk->start_ptr = tmp_ptr;
           stk->capacity = stk->capacity * 1.5;
-          *(stk->start_ptr + stk->capacity) = 228;
+          stackPlaceCanary(stk);
           FRESH_THE_HASH(stk);
+
           stackCheck (stk, "stackReSize", __LINE__);
           return;  
         }
         else 
         {
-          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc(stk->start_ptr - 1, sizeof(stk_elem_type) * (stk->capacity * 2 + 2));
+          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc((char*)stk->start_ptr - sizeof(uint64_t), sizeof(stk_elem_type) * (stk->capacity * 2) + 2*sizeof(uint64_t));
           if (NULL == tmp_ptr)
           {
             stk->error = STK_REALLOC_ERROR; 
@@ -129,10 +143,11 @@ void stackReSize (stack* stk, const char* mode)
             return;
           }
 
-          stk->start_ptr = tmp_ptr + 1;
+          stk->start_ptr = tmp_ptr;
           stk->capacity = stk->capacity * 2;
-          *(stk->start_ptr + stk->capacity) = 228;
+          stackPlaceCanary (stk);
           FRESH_THE_HASH(stk);
+
           stackCheck (stk, "stackReSize", __LINE__);
           return;
         }
@@ -141,7 +156,7 @@ void stackReSize (stack* stk, const char* mode)
     {
         if (stk->capacity < 10)
         {
-          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc(stk->start_ptr - 1, sizeof(stk_elem_type) * (stk->capacity / 3 + 2));
+          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc((char*)stk->start_ptr - sizeof(uint64_t), sizeof(stk_elem_type) * (stk->capacity / 3) + 2*sizeof(uint64_t));
           if (NULL == tmp_ptr)
           {
             stk->error = STK_REALLOC_ERROR;
@@ -150,16 +165,17 @@ void stackReSize (stack* stk, const char* mode)
             return;
           }
 
-            stk->start_ptr = tmp_ptr + 1;
+            stk->start_ptr = tmp_ptr ;
             stk->capacity = stk->capacity / 3;
-            *(stk->start_ptr + stk->capacity) = 228;
+            stackPlaceCanary(stk);
             FRESH_THE_HASH(stk);
+
             stackCheck (stk, "stackReSize", __LINE__);
             return;
         }
         if (stk->capacity > 10000)
         {
-          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc(stk->start_ptr - 1, sizeof(stk_elem_type) * (stk->capacity / 3 + 2));
+          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc((char*)stk->start_ptr - sizeof(uint64_t), sizeof(stk_elem_type) * (stk->capacity / 3) + 2*sizeof(uint64_t));
           if (NULL == tmp_ptr)
           {
             stk->error = STK_REALLOC_ERROR; 
@@ -168,16 +184,17 @@ void stackReSize (stack* stk, const char* mode)
             return;
           }
 
-          stk->start_ptr = tmp_ptr + 1;
+          stk->start_ptr = tmp_ptr;
           stk->capacity = stk->capacity / 3;
-          *(stk->start_ptr + stk->capacity) = 228;
+          stackPlaceCanary(stk);
           FRESH_THE_HASH(stk);
+
           stackCheck (stk, "stackReSize", __LINE__);
           return;  
         }
         else 
         {
-          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc(stk->start_ptr - 1, sizeof(stk_elem_type) * (stk->capacity * 2 / 3 + 2));
+          stk_elem_type* tmp_ptr = (stk_elem_type*) realloc((char*)stk->start_ptr - sizeof(uint64_t), sizeof(stk_elem_type) * (stk->capacity * 2 / 3) + 2*sizeof(uint64_t));
           if (NULL == tmp_ptr)
           {
             stk->error = STK_REALLOC_ERROR; 
@@ -186,10 +203,11 @@ void stackReSize (stack* stk, const char* mode)
             return;
           }
 
-          stk->start_ptr = tmp_ptr + 1;
+          stk->start_ptr = tmp_ptr;
           stk->capacity = stk->capacity * 2 / 3;
-          *(stk->start_ptr + stk->capacity) = 228;
+          stackPlaceCanary (stk);
           FRESH_THE_HASH(stk);
+
           stackCheck (stk, "stackReSize", __LINE__);
           return;
         }
@@ -198,6 +216,8 @@ void stackReSize (stack* stk, const char* mode)
     {
         fprintf(log_file, "stackReSize called with wrong mode");
     }
+    
+    return;
 }
 
 void stackDtor (stack *stk)
@@ -245,13 +265,13 @@ void stackCheck (stack* stk, const char* func_name, const int line_num)
         stackDump (stk, __FILE__, func_name, line_num);
         return;
     } 
-    if (*(stk->start_ptr - 1) != 228)
+    if (*(uint64_t*)((char*)stk->start_ptr - sizeof(uint64_t)) != BIRD_CONST)
     {
         stk->error = LEFT_BUFBIRD_DIED;
         stackDump (stk, __FILE__, func_name, line_num);
         return;
     }
-    if (*(stk->start_ptr + stk->capacity) != 228)
+    if (*(uint64_t*)((char*)stk->start_ptr + stk->capacity*(sizeof(stk_elem_type))) != BIRD_CONST)
     {
         stk->error = RIGHT_BUFBIRD_DIED;
         stackDump (stk, __FILE__, func_name, line_num);
@@ -386,21 +406,16 @@ void stackPrint (stack *stk)//MENTOR HELP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     fprintf(log_file, "l_stk_bird == %llu\n", stk->l_stk_bird);
     fprintf(log_file, "hash_stk == %llu\n", stk->hash_stk);
     fprintf(log_file, "calalculated stks hash == %llu\n", calc_hash_stk (stk));
-
-    
     fprintf(log_file, "\"stack was destructed\" == %s\n", ((stk->cntrDtor) ? "true" : "false"));
-    
     fprintf(log_file, "size == %d\n", stk->size);
     fprintf(log_file, "capacity == %d\n", stk->capacity);
-
     fprintf(log_file, "hash_buf == %llu\n", stk->hash_buf);
     fprintf(log_file, "calalculated bufs hash == %llu\n", calc_hash_buf (stk));
 
     if (NULL != stk->start_ptr)
     {
         fprintf(log_file, "start_ptr == %d\n", stk->start_ptr);
-
-        fprintf(log_file, "left_bufbird == %d\n", *(stk->start_ptr - 1));
+        fprintf(log_file, "left_bufbird == %d\n", *(uint64_t*)((char*)stk->start_ptr - sizeof(uint64_t)));
 
         if (stk->size >= stk->capacity > 0)
         {
@@ -408,16 +423,30 @@ void stackPrint (stack *stk)//MENTOR HELP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             fprintf(log_file, "or maybe this == %d\n", *(stk->start_ptr + stk->capacity + 1));
             for (int i = 0; i < stk->size; ++i)
             {
-                fprintf(log_file, "%d  %lu\n", i, *(stk->start_ptr + i)); // exchange scnd %d from anything 
+                if ( i == stk->size)
+                {
+                    fprintf (log_file, "%5d->%d\n", i, *(stk->start_ptr + i));
+                }
+                else
+                {
+                    fprintf(log_file, "%5d  %d\n", i, *(stk->start_ptr + i)); // exchange scnd %d from anything
+                } 
             }
         }
         if (0 < stk->size < stk->capacity)
         {
             for (int i = 0; i < stk->capacity; ++i)
             {
-                fprintf(log_file, "%d  %lu\n", i, *(stk->start_ptr + i)); // exchange %f from anything 
+                if ( i == stk->size)
+                {
+                    fprintf (log_file, "%5d->%d\n", i, *(stk->start_ptr + i));
+                }
+                else
+                {
+                    fprintf(log_file, "%5d  %d\n", i, *(stk->start_ptr + i)); // exchange scnd %d from anything
+                } 
             }
-            fprintf(log_file, "right_bufbird == %d\n", *(stk->start_ptr + stk->capacity));
+            fprintf(log_file, "right_bufbird == %d\n", *(uint64_t*)((char*)stk->start_ptr + stk->capacity*sizeof(stk_elem_type)));
         } 
     }
     fprintf(log_file, "\n");

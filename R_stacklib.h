@@ -55,25 +55,27 @@ struct stack
     const uint64_t l_stk_bird = BIRD_CONST;
 }; 
 
-void               stackCtor       (stack* stk, int cap);
+void               stackCtor        (stack* stk, int cap);
 
-void               stackPush       (stack *stk, stk_elem_type elem);
+void               stackPush        (stack *stk, stk_elem_type elem);
 
-stk_elem_type      stackPop        (stack *stk);
+stk_elem_type      stackPop         (stack *stk);
 
-void               stackReSize     (stack* stk, const char* instruction); // ebala sho pizdec
+void               stackReSize      (stack* stk, const char* instruction); // ebala sho pizdec
 
-void               stackDtor       (stack *stk); 
+void               stackDtor        (stack *stk); 
 
-void               stackCheck      (stack* stk, const char* func_name, const int line_num); 
+void               stackCheck       (stack* stk, const char* func_name, const int line_num); 
 
-void               stackDump       (stack *stk, const char* file_name, const char* func_name, const int line_num);
+void               stackDump        (stack *stk, const char* file_name, const char* func_name, const int line_num);
 
-void               stackPrint      (stack* stk); //MENTOR HELP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+void               stackPrint       (stack* stk); //MENTOR HELP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-uint64_t           calc_hash_stk   (stack *stk);
+void               stackPlaceCanary (stack* stk);
 
-uint64_t           calc_hash_buf   (stack *stk);
+uint64_t           calc_hash_stk    (stack *stk);
+
+uint64_t           calc_hash_buf    (stack *stk);
 
 #define FRESH_THE_HASH(stck)                    \
 do{                                             \
