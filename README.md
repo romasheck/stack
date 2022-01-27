@@ -1,2 +1,2 @@
 # stack
-stack with stackDump, canary and hash protection 
+stack with errors report, canary and hash protection 
