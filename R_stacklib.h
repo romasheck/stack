@@ -9,10 +9,13 @@
 #include <cmath>
 
 // right bufbird replace, if u exchange capacity
+// hash, resize, 
 
 extern FILE* log_file;
 
-const uint_64 BIRD_CONST = 228;
+const int BIRD_CONST = 228;
+
+const int POISON54 = 1488;
 
 enum type_of_error_with_stack
 {
@@ -42,9 +45,7 @@ enum modes_of_stackReSize
 
 //typedef int stk_elem_type; //you can exchange double for anything type
 typedef int stk_elem_type; //you can exchange double for anything type
-#define fomat_stk_elem %d //exchange specifier for ur type
-
-const stk_elem_type POISON54 = 1488;
+#define FORMAT_ELEM_T "%d" //exchange specifier for ur type
 
 struct stack
 {
@@ -96,5 +97,10 @@ do{                                             \
 #define PRINT_THE_HASH(stk)                                  \
 fprintf (log_file, "stk->hash_stk == %llu\n", stk->hash_stk);\
 fprintf (log_file, "calalculated stks hash == %llu", calc_hash_stk (stk));//db
+
+#define PRINT_ELEM(separ)                                   \
+fprintf (log_file, "%5d%s", i, separ);                      \
+fprintf (log_file, FORMAT_ELEM_T, *(stk->start_ptr + i));   \
+fprintf (log_file, "\n");                                   
 
 #endif

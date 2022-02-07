@@ -13,6 +13,7 @@ void stackCtor (stack* stk, int cap)
     {
         stk->error = STK_CALLOC_ERROR;
         stackDump (stk, __FILE__, __func__, __LINE__);
+        printf ("warning: failed to allocate memory");
         FRESH_THE_HASH (stk);
         return;
     }
@@ -424,11 +425,11 @@ void stackPrint (stack *stk)//MENTOR HELP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             {
                 if ( i == stk->size)
                 {
-                    fprintf (log_file, "%5d->%d\n", i, *(stk->start_ptr + i));
+                    PRINT_ELEM("->")
                 }
                 else
                 {
-                    fprintf(log_file, "%5d  %d\n", i, *(stk->start_ptr + i)); // exchange scnd %d from anything
+                    PRINT_ELEM("  ")
                 } 
             }
         }
@@ -438,11 +439,11 @@ void stackPrint (stack *stk)//MENTOR HELP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             {
                 if ( i == stk->size)
                 {
-                    fprintf (log_file, "%5d->%d\n", i, *(stk->start_ptr + i));
+                    PRINT_ELEM("->")
                 }
                 else
                 {
-                    fprintf(log_file, "%5d  %d\n", i, *(stk->start_ptr + i)); // exchange scnd %d from anything
+                    PRINT_ELEM("  ") // exchange scnd %d from anything
                 } 
             }
             fprintf(log_file, "right_bufbird == %d\n", *(uint64_t*)((char*)stk->start_ptr + stk->capacity*sizeof(stk_elem_type)));
