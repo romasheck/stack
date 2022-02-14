@@ -105,6 +105,7 @@ void stackReSize (stack* stk, const int mode)
             stackDump(stk, __FILE__, "stackResize", __LINE__);
             return;
           }
+          free (stk->start_ptr);
           stk->start_ptr = tmp_ptr;
           stk->capacity = stk->capacity * 1.5 + 5;
           stackPlaceCanary (stk);
@@ -123,7 +124,7 @@ void stackReSize (stack* stk, const int mode)
             FRESH_THE_HASH(stk);
             return;
           }
-
+          free (stk->start_ptr);
           stk->start_ptr = tmp_ptr;
           stk->capacity = stk->capacity * 1.5;
           stackPlaceCanary(stk);
@@ -142,7 +143,7 @@ void stackReSize (stack* stk, const int mode)
             FRESH_THE_HASH(stk);
             return;
           }
-
+          free (stk->start_ptr);
           stk->start_ptr = tmp_ptr;
           stk->capacity = stk->capacity * 2;
           stackPlaceCanary (stk);
@@ -164,7 +165,7 @@ void stackReSize (stack* stk, const int mode)
             stackDump(stk, __FILE__, "stackResize", __LINE__);
             return;
           }
-
+            free (stk->start_ptr);
             stk->start_ptr = tmp_ptr ;
             stk->capacity = stk->capacity / 3;
             stackPlaceCanary(stk);
@@ -183,7 +184,7 @@ void stackReSize (stack* stk, const int mode)
             stackDump(stk, __FILE__, "stackResize", __LINE__);
             return;
           }
-
+            free (stk->start_ptr);
           stk->start_ptr = tmp_ptr;
           stk->capacity = stk->capacity / 3;
           stackPlaceCanary(stk);
@@ -202,7 +203,7 @@ void stackReSize (stack* stk, const int mode)
             FRESH_THE_HASH(stk);
             return;
           }
-
+            free (stk->start_ptr);
           stk->start_ptr = tmp_ptr;
           stk->capacity = stk->capacity * 2 / 3;
           stackPlaceCanary (stk);
